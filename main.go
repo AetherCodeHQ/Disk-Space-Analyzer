@@ -1,49 +1,56 @@
-
 package main
 
 import (
 	"fmt"
-	"io/ioutil"
 	"os"
 	"path/filepath"
-	"strings"
+	"sort"
 )
+
+type Entry struct {
+	Path string
+	Size int64
+}
 
 func main() {
 	dir := "."
 	if len(os.Args) > 1 {
 		dir = os.Args[1]
 	}
-	files := 0
-	lines := 0
-	var sizes []int64
-	filepath.Walk(dir, func(p string, info os.FileInfo, err error) error {
-		if err != nil || info.IsDir() {
-			return nil
+	var entries []Entry
+	filepath.Walk(dir, func(path string, info os.FileInfo, err error) error {
+		if err == nil && !info.IsDir() {
+			entries = append(entries, Entry{path, info.Size()})
 		}
-		if strings.HasPrefix(info.Name(), ".") {
-			return nil
-		}
-		files++
-		lines += countLines(p)
-		sizes = append(sizes, info.Size())
 		return nil
 	})
-	fmt.Printf("files=%d lines=%d size=%d\n", files, lines, sum(sizes))
+	sort.Slice(entries, func(i, j int) bool {
+		return entries[i].Size > entries[j].Size
+	})
+	fmt.Println("Disk Space Analyzer")
+	fmt.Println("===================")
+	var total int64
+	fmt.Println("Top 10 largest files:")
+	for i, e := range entries {
+		if i >= 10 {
+			break
+		}
+		total += e.Size
+		fmt.Printf("  %-50s %s\n", e.Path, humanSize(e.Size))
+	}
+	fmt.Printf("\nTotal scanned: %s\n", humanSize(total))
+	fmt.Printf("Files: %d\n", len(entries))
 }
 
-func countLines(p string) int {
-	b, err := ioutil.ReadFile(p)
-	if err != nil {
-		return 0
+func humanSize(b int64) string {
+	const unit = 1024
+	if b < unit {
+		return fmt.Sprintf("%d B", b)
 	}
-	return strings.Count(string(b), "\n") + 1
-}
-
-func sum(xs []int64) int64 {
-	var s int64
-	for _, x := range xs {
-		s += x
+	div, exp := int64(unit), 0
+	for n := b / unit; n >= unit; n /= unit {
+		div *= unit
+		exp++
 	}
-	return s
+	return fmt.Sprintf("%.1f %cB", float64(b)/float64(div), "KMGTPE"[exp])
 }
