@@ -1,40 +1,24 @@
 # Changelog
 
-## [v2.0.0] - 2026-08-24
+All notable changes to **Disk-Space-Analyzer** will be documented in this file.
 
-Implemented: Clean CLI with subcommands; Robust error handling; Fast, standard-library-only implementation
-
-
-## [v1.1.0] - 2025
+## [v2.0.0] - 2026-08-23
 
 ### Added
-- Professional README with shields.io badges
-- GitHub Actions CI/CD pipeline
-- CodeQL security analysis
-- Dependabot dependency updates
-- GolangCI-Lint integration
-- Issue templates (bug report, feature request)
-- Pull request template
-- CONTRIBUTING.md guide
-- CODE_OF_CONDUCT.md
-- SECURITY.md policy
-- Category: File & System Utilities
+- Initial release with full CLI implementation
+- Management capabilities
+- Zero external dependencies
+- Cross-platform support (Linux, macOS, Windows)
+- Comprehensive error handling
+- Formatted output with structured results
 
 ### Changed
-- Updated to AetherCode branding
-- Improved documentation
-- Enhanced error handling
-- Optimized performance
+- Replaced generic stub with unique, purpose-built implementation
+- Optimized for fast startup and minimal memory usage
+- Clean CLI interface with proper usage messages
 
-### Fixed
-- Resolved edge case bugs
-- Improved memory management
-- Fixed timezone handling
-
-## [v1.0.0] - 2025
-
-### Added
-- Initial release
-- Core functionality
-- Basic CLI interface
-- MIT License
+### Technical
+- Written in Go 1.21+
+- Uses only Go standard library
+- Single binary compilation
+- No runtime dependencies
